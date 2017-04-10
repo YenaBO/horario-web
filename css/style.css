@@ -1,0 +1,20 @@
+.test{
+    padding: 0;
+    margin: 0;
+    width: 150px; 
+    padding: 5px; 
+    border: solid 1px black; 
+    float: left;
+    position: relative; 
+    top: 40px; 
+    left: 0px;
+}
+.test2{
+    width:  150px; 
+    padding: 5px; 
+    border: solid 1px black; 
+    float: left;
+    position: relative; 
+    top: 40px; 
+    left: 70px;
+}
