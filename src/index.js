@@ -43,6 +43,10 @@ var config = {
   lessonList=["-KZvwMWaMgGC0qSBhKcv", "-KZvwYqaUE6vNNzUcW7y", "-KZvyYujGxzAf9R_W44Z"]
 
 
+  
+
+
+
   class Place extends Component{
 
     constructor(){
@@ -169,10 +173,34 @@ class Time extends Component{
 }
 
 class App extends Component {
+
+  refresh(){
+    timeTable.child(timeTableKey).on("value", snap=> {
+
+    const currentLesson = snap.child("lessons/"+lessonList[0]);
+    
+    const subjectKey = currentLesson.child("subject").val();
+    const teacherKey = currentLesson.child("teacher").val();
+
+    const currentSubject = snap.child("subjects/"+subjectKey);
+    const currentTeacher = snap.child("teachers/"+teacherKey);
+
+    const tplace= currentLesson.child("place").val();
+    const tsubject = currentSubject.child("name").val();
+    const tteacher = currentTeacher.child("name").val();
+    const ttimeStart = currentLesson.child("timeStart").val()-1;
+    const timeEnd = currentLesson.child("timeEnd").val()-1;
+    const tweek = currentLesson.child("week").val();
+    
+  });
+
+  }
+
   render() {   
+    console.log(this.tweek)
     return (
       <div className="App">
-         <Place/>
+        <Place/>
         <Subject/>
         <Teacher/>
         <Time/>
