@@ -129,19 +129,31 @@ class Time extends Component{
   constructor(){
     super();
     this.state={
-      timeStart: "00:00",
-      timeEnd: "00:00",
-      week: 0
+      lessons: []
     }
   }
 
   componentDidMount(){
     timeTable.child(timeTableKey).on("value", snap=> {
-      const currentLesson = snap.child("lessons/"+lessonList[0]);
+      // ты сначала выгребаешь в массив все свои уроки в нужном формате
+      // lessonList.map применяется к массиву и возвращает новый массив 
+      // который состоит из элементов которые возвращает коллбек
+      // проще говоря, получаешь новый массив из текущего проводя какую то 
+      // операцию над каждым элементом
+      // в данном случае из массива своих ключей ты получаешь массив уже готовых для вывода элементов
+      const allLessons = lessonList.map(currentLesson => {
+        // пороходишься по массиву, для каждого элемента берез его snap
+        const currentLessonSnap = snap.child("lessons/" + currentLesson);
+        // возвращаеш уже готовый элмент для вывода
+        return {
+          timeStart: currentLessonSnap.child("timeStart").val()-1,
+          timeEnd: currentLessonSnap.child("timeEnd").val()-1,
+          week:  currentLessonSnap.child("week").val()
+        }
+      });
+      // кладешь этот массив в state
       this.setState({
-        timeStart: currentLesson.child("timeStart").val()-1,
-        timeEnd: currentLesson.child("timeEnd").val()-1,
-        week:  currentLesson.child("week").val()
+        lessons: allLessons
       })
   });
   }
@@ -160,14 +172,20 @@ class Time extends Component{
   }
     
   render() {
-    let ts = this.timeFormat(this.state.timeStart);
-    let te = this.timeFormat(this.state.timeEnd);
+    // а вот тут уже выводишь сам стейт по аналогии с тем что делали выше: 
+    // получаешь новый массив react-элементов из массива с данными через мап
+    const {lessons} = this.state;
     return (
-      <div>
-        <p>{ts}</p>
-        <p>{te}</p>
-        <p>{this.state.week} </p>
-      </div>)
+      <ul>
+        { lessons.map(lesson => <li>
+          <div>
+            <p>{this.timeFormat(lesson.timeStart)}</p>
+            <p>{this.timeFormat(lesson.timeEnd)}</p>
+            <p>{lesson.week} </p>
+          </div>          
+        </li>) }
+      </ul>
+    );
   }  
 
 }
