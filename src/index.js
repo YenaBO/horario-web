@@ -40,108 +40,47 @@ var config = {
       i++;
     })
   });
-  lessonList=["-KZvwMWaMgGC0qSBhKcv", "-KZvwYqaUE6vNNzUcW7y", "-KZvyYujGxzAf9R_W44Z"]
 
+class App extends Component {
 
-  
-
-
-
-  class Place extends Component{
-
-    constructor(){
-      super();
-      this.state={
-        place: ""
-      }
-    }
-
-    componentDidMount(){
-      timeTable.child(timeTableKey).on("value", snap=> {
-        const currentLesson = snap.child("lessons/"+lessonList[0]);
-        this.setState({
-          place: currentLesson.child("place").val()
-        })
-    });
-    }
-
-    render() {
-      return <p>{this.state.place}</p> 
-    }  
-
-  }
-
-  class Subject extends Component{
-
-    constructor(){
-      super();
-      this.state={
-        subject: ""
-      }
-    }
-
-    componentDidMount(){
-      timeTable.child(timeTableKey).on("value", snap=> {
-        const currentLesson = snap.child("lessons/"+lessonList[0]);
-        const subjectKey = currentLesson.child("subject").val();
-        const currentSubject = snap.child("subjects/"+subjectKey);
-        this.setState({
-          subject: currentSubject.child("name").val(),
-        })
-    });
-    }
-
-    render() {
-      return <p>{this.state.subject}</p> 
-    }  
-
-  }
-
-
-   class Teacher extends Component{
-
-    constructor(){
-      super();
-      this.state={
-        teacher: ""
-      }
-    }
-
-      componentDidMount(){
-      timeTable.child(timeTableKey).on("value", snap=> {
-        const currentLesson = snap.child("lessons/"+lessonList[0]);
-        const teacherKey = currentLesson.child("teacher").val();
-        const currentTeacher = snap.child("teachers/"+teacherKey);
-        this.setState({
-           teacher: currentTeacher.child("name").val(),
-        })
-    });
-    }
-
-    render() {
-      return <p>{this.state.teacher}</p> 
-    }  
-
-  }
-
-class Time extends Component{
-
-  constructor(){
+   constructor(){
     super();
     this.state={
-      timeStart: "00:00",
-      timeEnd: "00:00",
-      week: 0
+      lessons: []
     }
   }
 
   componentDidMount(){
     timeTable.child(timeTableKey).on("value", snap=> {
-      const currentLesson = snap.child("lessons/"+lessonList[0]);
+      // ты сначала выгребаешь в массив все свои уроки в нужном формате
+      // lessonList.map применяется к массиву и возвращает новый массив 
+      // который состоит из элементов которые возвращает коллбек
+      // проще говоря, получаешь новый массив из текущего проводя какую то 
+      // операцию над каждым элементом
+      // в данном случае из массива своих ключей ты получаешь массив уже готовых для вывода элементов
+      const allLessons = lessonList.map(currentLesson => {
+        // пороходишься по массиву, для каждого элемента берез его snap
+        const currentLessonSnap = snap.child("lessons/" + currentLesson);
+            const subjectKey = currentLessonSnap.child("subject").val();
+            const teacherKey = currentLessonSnap.child("teacher").val();
+
+            const currentSubject = snap.child("subjects/"+subjectKey);
+            const currentTeacher = snap.child("teachers/"+teacherKey);
+        // возвращаеш уже готовый элмент для вывода
+        return {
+          day: currentLessonSnap.child("day").val(),
+          place: currentLessonSnap.child("place").val(),
+          subject: currentSubject.child("name").val(),
+          teacher: currentTeacher.child("name").val(),
+          timeStart: currentLessonSnap.child("timeStart").val()-1,
+          timeEnd: currentLessonSnap.child("timeEnd").val()-1,
+          week:  currentLessonSnap.child("week").val()
+        }
+      });
+      console.log(allLessons)
+      // кладешь этот массив в state
       this.setState({
-        timeStart: currentLesson.child("timeStart").val()-1,
-        timeEnd: currentLesson.child("timeEnd").val()-1,
-        week:  currentLesson.child("week").val()
+        lessons: allLessons
       })
   });
   }
@@ -160,53 +99,67 @@ class Time extends Component{
   }
     
   render() {
-    let ts = this.timeFormat(this.state.timeStart);
-    let te = this.timeFormat(this.state.timeEnd);
-    return (
-      <div>
-        <p>{ts}</p>
-        <p>{te}</p>
-        <p>{this.state.week} </p>
-      </div>)
-  }  
+    // а вот тут уже выводишь сам стейт по аналогии с тем что делали выше: 
+    // получаешь новый массив react-элементов из массива с данными через мап
+    const {lessons} = this.state;
+    console.log(lessons.length)
+    var x =12, y=50;
+    var minTime=999, maxTime=0;
+    lessons.map(function(lesson) {
+      if(minTime>lesson.timeStart) minTime=lesson.timeStart;
+      if(maxTime<lesson.timeEnd) maxTime=lesson.timeEnd;
+    });
 
-}
 
-class App extends Component {
+    console.log("min: " +minTime);
+    console.log("max: " +maxTime);
+    var scale = maxTime-minTime;
+    console.log("scale: " + scale);
 
-  refresh(){
-    timeTable.child(timeTableKey).on("value", snap=> {
-
-    const currentLesson = snap.child("lessons/"+lessonList[0]);
-    
-    const subjectKey = currentLesson.child("subject").val();
-    const teacherKey = currentLesson.child("teacher").val();
-
-    const currentSubject = snap.child("subjects/"+subjectKey);
-    const currentTeacher = snap.child("teachers/"+teacherKey);
-
-    const tplace= currentLesson.child("place").val();
-    const tsubject = currentSubject.child("name").val();
-    const tteacher = currentTeacher.child("name").val();
-    const ttimeStart = currentLesson.child("timeStart").val()-1;
-    const timeEnd = currentLesson.child("timeEnd").val()-1;
-    const tweek = currentLesson.child("week").val();
-    
-  });
-
-  }
-
-  render() {   
-    console.log(this.tweek)
-    return (
-      <div className="App">
-        <Place/>
-        <Subject/>
-        <Teacher/>
-        <Time/>
-      </div>
+    var scrollHeight = Math.max(
+      document.body.scrollHeight, document.documentElement.scrollHeight,
+      document.body.offsetHeight, document.documentElement.offsetHeight,
+      document.body.clientHeight, document.documentElement.clientHeight
     );
-  }
+    console.log("Scroll: "+scrollHeight)
+
+    return (
+      
+
+      <div style={{
+        width: "85vh",
+        height: "85vh"
+      }}>
+      { lessons.map(function(lesson) {
+          //выбор недели, которую нужо 
+          if (lesson.week ==0 || lesson.week == 1)
+          return(
+          <div  style={{position: "absolute",
+          "margin-left": "100px",
+        width: "100px",
+        height: String((lesson.timeEnd-lesson.timeStart)*100/scale )+"%",
+        top: String((lesson.timeStart-minTime)*100/scale )+"%",
+        left: String(x*lesson.day)+"%",
+        padding: "2px",
+        background: "#fff", 
+        border: "3px dashed #312a22",}}>
+            <p className="name">{lesson.subject}</p>
+            <p>{lesson.place}</p>
+            <p>{lesson.teacher}</p>
+            <p>{this.timeFormat(lesson.timeStart)}</p>
+            <p>{this.timeFormat(lesson.timeEnd)}</p>
+            <p>{lesson.day}</p>
+            {//<p>{lesson.week}</p>
+          }
+          </div>          
+          )}.bind(this)
+        )}
+      </div>
+      
+    );
+
+
+  }  
 }
 
 
@@ -214,5 +167,4 @@ ReactDOM.render(
   <App />,
   document.getElementById('root')
 );
-
 
