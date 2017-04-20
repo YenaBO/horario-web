@@ -1,0 +1,70 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="../css/material.css">
+<script src="../src/material.js"></script>
+</head>
+
+<body>
+    <h4>Add subject</h4>
+	
+	<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--primary show-modal">
+		<i class="material-icons">add</i>
+	</button>
+
+  <dialog class="mdl-dialog">
+		<div class="mdl-dialog__content">
+		
+		
+			<li class="mdl-list__item">
+				<span class="mdl-list__item-primary-content">
+					<i class="material-icons mdl-list__item-icon">label</i>
+					Add subject
+				</span>
+			</li>
+	
+			<form action="#">
+			
+				<div class="mdl-textfield mdl-js-textfield">
+					<input class="mdl-textfield__input" type="text" id="name">
+					<label class="mdl-textfield__label" for="name">Name</label>
+				</div>
+				
+				<div class="mdl-textfield mdl-js-textfield">
+					<input class="mdl-textfield__input" type="text" id="abbreviation">
+					<label class="mdl-textfield__label" for="abbreviation">Abbreviation</label>
+				</div>
+					
+				<div class="mdl-textfield mdl-js-textfield">
+					<textarea class="mdl-textfield__input" type="text" id="info"></textarea>
+					<label class="mdl-textfield__label" for="info">Info</label>
+				</div>
+
+				</form>
+			
+		</div>
+		
+		<div class="mdl-dialog__actions mdl-dialog__actions">
+			<button type="button" class="mdl-button">OK</button>
+			<button type="button" class="mdl-button close" >CLOSE</button>
+		</div>
+		
+  </dialog>
+  
+	
+    
+	<script>
+    var dialog = document.querySelector('dialog');
+    var showModalButton = document.querySelector('.show-modal');
+    if (! dialog.showModal) {
+      dialogPolyfill.registerDialog(dialog);
+    }
+    showModalButton.addEventListener('click', function() {
+      dialog.showModal();
+    });
+    dialog.querySelector('.close').addEventListener('click', function() {
+      dialog.close();
+    });
+  </script>
+</body>
+</html>
