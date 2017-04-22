@@ -1,159 +1,167 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import ReactDOM from 'react-dom';
+import styles from './material.css';
+import * as material from "./material.js";
+import ReactMDL from 'react-mdl';
+/*var config = {
+    apiKey: "AIzaSyA0DlUWE0V9e-6AL0Ta9eaVIf2yrMbyc_k",
+    authDomain: "horario-10354.firebaseapp.com",
+    databaseURL: "https://horario-10354.firebaseio.com",
+    projectId: "horario-10354",
+    storageBucket: "horario-10354.appspot.com",
+    messagingSenderId: "855280611126"
+  };
+  firebase.initializeApp(config);*/
 
-var config = {
-    apiKey: "AIzaSyBeYSr27_voOElA5UvC1fp9D1y9y246IZg",
-    authDomain: "test-firebase-eb0b3.firebaseapp.com",
-    databaseURL: "https://test-firebase-eb0b3.firebaseio.com",
-    projectId: "test-firebase-eb0b3",
-    storageBucket: "test-firebase-eb0b3.appspot.com",
-    messagingSenderId: "227801800277"
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDhurJ_xMdJEtOcafHzalB9KvFjyBThqmg",
+    authDomain: "horario-5c4c0.firebaseapp.com",
+    databaseURL: "https://horario-5c4c0.firebaseio.com",
+    projectId: "horario-5c4c0",
+    storageBucket: "horario-5c4c0.appspot.com",
+    messagingSenderId: "868905265817"
   };
   firebase.initializeApp(config);
 
-  //any user key
-  var userKey = "2uFC4t3G7xS9SVZxOhJrc30k54s2";
-  //any time table key 
-  var timeTableKey = "-KZXe_C8hopNLfo3l1VO";
-  
-  var timeTableList =[];
+  var userKey = "YhTvBZ5eMTPeuhTKZAh9SeCiVGt1";
+  var timeTableKey = "-KguZ6-bx-bkMGjutdkJ";
+  const weekCycle =1;
+  var timeTableList = new Array();
   var lessonList = new Array();
-  const users = firebase.database().ref().child("users")
-  const timeTable = users.child(userKey+"/timetables_data");
+  const users = firebase.database().ref().child("user")
+  const timeTable = users.child(userKey+"/timetable_public");
   const lessons = timeTable.child(timeTableKey+"/lessons");
-
-  timeTable.once("value", snap => {
-    snap.forEach(listed =>{
-      timeTableList.push(listed.key);
-    })
-  });
-
   let i=0;
   
-  
-
   lessons.once("value", snap => {
     snap.forEach(listed =>{
       lessonList[i]= listed.key;
-
       i++;
     })
   });
-  lessonList=["-KZvwMWaMgGC0qSBhKcv", "-KZvwYqaUE6vNNzUcW7y", "-KZvyYujGxzAf9R_W44Z"]
-
-
   
 
+  class Dialog extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.handleOpenDialog = this.handleOpenDialog;
+    this.handleCloseDialog = this.handleCloseDialog;
+  }
 
 
-  class Place extends Component{
+ 
+  render() {
+    return (
+          <div>
+          <li className="mdl-list__item">
+        <span className="mdl-list__item-primary-content">
+          <i className="material-icons mdl-list__item-icon">label</i>
+          Add subject
+        </span>
+        </li>
+            <form action="#">
+
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input className="mdl-textfield__input" type="text" id="name"/>
+                <label className="mdl-textfield__label" htmlFor="name">Name</label>
+            </div>
+
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input className="mdl-textfield__input" type="text" id="abbreviation"/>
+                <label className="mdl-textfield__label" htmlFor="abbreviation">Abbreviation</label>
+            </div>
+
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <textarea className="mdl-textfield__input" type="text" id="info"></textarea>
+                <label className="mdl-textfield__label" htmlFor="info">Info</label>
+            </div>
+
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
+                <input className="mdl-textfield__input" type="text" id="sample1" value="" readOnly tabIndex="-1"/>
+
+                <label htmlFor="sample1" className="mdl-textfield__label">Color</label>
+
+                <ul htmlFor="sample1" className="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+
+                    <li className="mdl-menu__item">
+                        <div className="circle" styles ="background: black;"></div>
+                        <div styles ="padding-left:50px; position: static">black</div>
+                    </li>
+
+                    <li className="mdl-menu__item">
+                        <div className="circle" styles ="background: red;"></div>
+                        <div styles ="padding-left:50px;">red</div>
+                    </li>
+
+                    <li className="mdl-menu__item">
+                        <div className="circle" styles ="background: yellow;"></div>
+                        <div styles ="padding-left:50px;">yellow</div>
+                    </li>
+
+                    <li className="mdl-menu__item">
+                        <div className="circle" styles ="background: pink;">chc</div>
+                        <div styles ="padding-left:50px;">pink</div>
+                    </li>
+
+                    <li className="mdl-menu__item">
+                        <div className="circle" styles ="background: green;"></div>
+                        <div styles ="padding-left:50px;">green</div>
+
+                    </li>
+                </ul>
+
+            </div>
+
+        </form>
+         <div class="mdl-dialog__actions mdl-dialog__actions">
+        <button type="button" class="mdl-button ok">OK</button>
+        <button type="button" class="mdl-button close">CLOSE</button>
+    </div>
+          </div>
+    );
+  }
+}
+
+
+class App extends Component {
 
     constructor(){
-      super();
-      this.state={
-        place: ""
-      }
-    }
-
-    componentDidMount(){
-      timeTable.child(timeTableKey).on("value", snap=> {
-        const currentLesson = snap.child("lessons/"+lessonList[0]);
-        this.setState({
-          place: currentLesson.child("place").val()
-        })
-    });
-    }
-
-    render() {
-      return <p>{this.state.place}</p> 
-    }  
-
-  }
-
-  class Subject extends Component{
-
-    constructor(){
-      super();
-      this.state={
-        subject: ""
-      }
-    }
-
-    componentDidMount(){
-      timeTable.child(timeTableKey).on("value", snap=> {
-        const currentLesson = snap.child("lessons/"+lessonList[0]);
-        const subjectKey = currentLesson.child("subject").val();
-        const currentSubject = snap.child("subjects/"+subjectKey);
-        this.setState({
-          subject: currentSubject.child("name").val(),
-        })
-    });
-    }
-
-    render() {
-      return <p>{this.state.subject}</p> 
-    }  
-
-  }
-
-
-   class Teacher extends Component{
-
-    constructor(){
-      super();
-      this.state={
-        teacher: ""
-      }
-    }
-
-      componentDidMount(){
-      timeTable.child(timeTableKey).on("value", snap=> {
-        const currentLesson = snap.child("lessons/"+lessonList[0]);
-        const teacherKey = currentLesson.child("teacher").val();
-        const currentTeacher = snap.child("teachers/"+teacherKey);
-        this.setState({
-           teacher: currentTeacher.child("name").val(),
-        })
-    });
-    }
-
-    render() {
-      return <p>{this.state.teacher}</p> 
-    }  
-
-  }
-
-class Time extends Component{
-
-  constructor(){
-    super();
-    this.state={
-      lessons: []
-    }
-  }
-
-  componentDidMount(){
-    timeTable.child(timeTableKey).on("value", snap=> {
-      // ты сначала выгребаешь в массив все свои уроки в нужном формате
-      // lessonList.map применяется к массиву и возвращает новый массив 
-      // который состоит из элементов которые возвращает коллбек
-      // проще говоря, получаешь новый массив из текущего проводя какую то 
-      // операцию над каждым элементом
-      // в данном случае из массива своих ключей ты получаешь массив уже готовых для вывода элементов
-      const allLessons = lessonList.map(currentLesson => {
-        // пороходишься по массиву, для каждого элемента берез его snap
-        const currentLessonSnap = snap.child("lessons/" + currentLesson);
-        // возвращаеш уже готовый элмент для вывода
-        return {
-          timeStart: currentLessonSnap.child("timeStart").val()-1,
-          timeEnd: currentLessonSnap.child("timeEnd").val()-1,
-          week:  currentLessonSnap.child("week").val()
+        super();
+        this.state={
+          lessons: [],
+          week: 1
         }
-      });
-      // кладешь этот массив в state
+      }
+
+    componentDidMount(){
+    timeTable.on("value", snap=> {
+      const currentTimeTable = snap.child(timeTableKey);
+      weekCycle = currentTimeTable.child("weekCycle").val();
+      const allLessons = lessonList.map(currentLesson => {
+      const currentLessonSnap = currentTimeTable.child("lessons/" + currentLesson);
+      const teacherKey = currentLessonSnap.child("teacher").val();
+      const currentTeacher = currentTimeTable.child("teachers/"+teacherKey);
+      const subjectKey = currentLessonSnap.child("subject").val();
+      const currentSubject = currentTimeTable.child("subjects/"+subjectKey);
+
+      return {
+        day: currentLessonSnap.child("day").val(),
+        subject: currentSubject.child("name").val(),
+        subjectColor: currentSubject.child("color").val(),
+        place: currentLessonSnap.child("place").val(),
+        teacher: currentTeacher.child("name").val(),
+        timeStart: currentLessonSnap.child("timeStart").val()-1,
+        timeEnd: currentLessonSnap.child("timeEnd").val()-1,
+        week:  currentLessonSnap.child("week").val(),
+        timeTable: timeTableKey
+      }
+    });
       this.setState({
-        lessons: allLessons
+        lessons: allLessons,
+        week: 1
       })
   });
   }
@@ -170,62 +178,200 @@ class Time extends Component{
       }
       return time;
   }
-    
-  render() {
-    // а вот тут уже выводишь сам стейт по аналогии с тем что делали выше: 
-    // получаешь новый массив react-элементов из массива с данными через мап
-    const {lessons} = this.state;
-    return (
-      <ul>
-        { lessons.map(lesson => <li>
-          <div>
-            <p>{this.timeFormat(lesson.timeStart)}</p>
-            <p>{this.timeFormat(lesson.timeEnd)}</p>
-            <p>{lesson.week} </p>
-          </div>          
-        </li>) }
-      </ul>
-    );
-  }  
 
-}
-
-class App extends Component {
-
-  refresh(){
-    timeTable.child(timeTableKey).on("value", snap=> {
-
-    const currentLesson = snap.child("lessons/"+lessonList[0]);
-    
-    const subjectKey = currentLesson.child("subject").val();
-    const teacherKey = currentLesson.child("teacher").val();
-
-    const currentSubject = snap.child("subjects/"+subjectKey);
-    const currentTeacher = snap.child("teachers/"+teacherKey);
-
-    const tplace= currentLesson.child("place").val();
-    const tsubject = currentSubject.child("name").val();
-    const tteacher = currentTeacher.child("name").val();
-    const ttimeStart = currentLesson.child("timeStart").val()-1;
-    const timeEnd = currentLesson.child("timeEnd").val()-1;
-    const tweek = currentLesson.child("week").val();
-    
-  });
-
+  toColor(num) {
+    num >>>= 0;
+    var b = num & 0xFF,
+        g = (num & 0xFF00) >>> 8,
+        r = (num & 0xFF0000) >>> 16,
+        a = ( (num & 0xFF000000) >>> 24 ) / 255 ;
+    return "rgba(" + [r, g, b, a].join(",") + ")";
   }
 
-  render() {   
-    console.log(this.tweek)
+  
+
+  isColorDark(color) { 
+    let brightness = ((0x00FF0000&color) >> 16) * 0.299 + 
+    ((0x0000FF00&color) >> 8) * 0.587 + 
+    (0x000000FF&color) * 0.114; 
+    return brightness < 160; 
+  } 
+  
+  nextWeek = () =>  {
+    if(this.state.week<weekCycle){
+        this.setState({
+          lesson: this.state.lessons,
+          week: this.state.week+1,});
+      }else {
+        this.setState({
+          lesson: this.state.lessons,
+          week: 1,});
+      }
+  }
+
+showModalDialog = () => {
+            
+
+
+            console.log("ASDASDASDSADS")
+            var dialog = document.querySelector('dialog');
+
+            dialog.showModal();
+
+           
+  } 
+ 
+
+  render() {
+    const {lessons} = this.state;   
+    const week = this.state.week;
+    var min=9999, max=0;
+    
+    var timeArr=[];
+    var daysName=["Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday", "Sunday"];
+    var days= [0,0,0,0,0,0,0]
+    var day=0;
+    
+    lessons.map(function(lesson){
+      if(min>lesson.timeStart) min=lesson.timeStart;
+      if(max<lesson.timeEnd) max=lesson.timeEnd;
+      if(timeArr.indexOf(lesson.timeEnd)===-1 && (lesson.week===0 || lesson.week ===week))
+        timeArr.push(lesson.timeEnd);      
+      if(timeArr.indexOf(lesson.timeStart)===-1 && (lesson.week===0 || lesson.week ===week))
+            timeArr.push(lesson.timeStart);
+      if(days[lesson.day]===0 && (lesson.week===0 || lesson.week ===week)) {
+        days[lesson.day]= lesson.day+1;
+        day++;
+      }
+    }.bind(this))
+    console.log(day)
+    var x=100/day;
+    var i=0;
+  
+    console.log(days)
+
+    while(i<7){
+      if(days[i]===0){
+        daysName.splice(i,1);
+        days.splice(i,1);
+      } 
+      ++i;
+    }
+    if(days[days.length-1]==0)     days.splice(days.length-1,1)
+      console.log(days)
+    var scale=max-min;
+    
+    
+      
+      timeArr.sort(function(a, b) {
+          if (a > b) return 1;
+          if (a < b) return -1;
+        })
+
+    for(let i=1; i<timeArr.length; i++){
+      if(timeArr[i]-timeArr[i-1]<=15){
+        timeArr.splice(i,1)
+
+      }
+
+    }
+    i=0;
+
+
+
     return (
-      <div className="App">
-        <Place/>
-        <Subject/>
-        <Teacher/>
-        <Time/>
+      <div>
+      <div className="navbar navbar-default">
+      
+        <div s={{"paddingLeft": "8%","paddingTop":"5px", "width":"45px", "height":"45px"}} >       
+             <img src="a.png" style={{"position": "absolute", "width":"35px", "height":"35px"}} onClick={this.nextWeek}/>
+            <div style={{"paddingLeft": "13px", "paddingTop": "10px", "width":"100%", "height":"100%", "color": "rgb(128,128,128)"}}>{this.state.week}</div>
+        </div>  
+          
+      </div>
+      
+      <div className="container-fluid">
+        <div className="row">
+          
+          <dialog className="mdl-dialog">
+            <div className="mdl-dialog__content">
+<Dialog/>
+            </div>
+          </dialog>
+
+          <div className="hidden-sm hidden-xs col-md-1 col-lg-1" style={{"height":"87vh",  "display":"inline-block"}}> 
+           
+          {
+             timeArr.map(function(time) {
+               
+                return(
+                  <div>
+                    <div className="mdl-list__times" style={{ "position": "absolute",  "top": String(100*(time-min)/scale -2)+"%", "margineTop": "0px"}}> 
+                      {this.timeFormat(time)} 
+
+                    </div>
+                    <div style={{"position": "absolute", "left":"112px", "top": String(100*(time-min)/scale)+"%", "height":"1px", "width": "90vw", "background": "Lavender"}}></div>  
+                  </div>
+                  );
+              
+            }.bind(this))
+           }
+                
+
+          </div>
+          <div className="col-xs-11  col-sm-11 col-md-11 col-lg-11" style={{ "width": "90vw", "height":"87vh"}}>
+            <div> 
+              {days.map(function(day){
+                  return (<div className="mdl-list__days" style={{"position": "absolute",
+                            "left": String(x*(days.indexOf(day))+4)+"%",
+                            "top": "-20px"}} >            
+                           {daysName[++i-1]}
+                        </div>)
+              }.bind(this))}
+            </div>
+            { lessons.map(function(lesson) {
+              if(lesson.week===0 || lesson.week ===week)
+              return(
+                      
+                          <div id="lesson" style={{
+                            "overflow": "hidden",
+                            "textOverflow": "ellipsis",
+                            "position": "absolute",
+                            "left": String(x*days.indexOf(lesson.day+1))+"%",
+                            "top": String(100*(lesson.timeStart-min)/scale )+"%",
+                            "width": "12%",
+                            "color": this.isColorDark(lesson.subjectColor) ? "white" : "black",
+                            "height": String(100*(lesson.timeEnd-lesson.timeStart)/scale)+"%",  
+                            "background": this.toColor(lesson.subjectColor)
+                            }}> 
+                            <div style={{"padding": "5px"}}>
+                              <li className="mdl-list__lesson_name" style={{"fontWeight": "bold", "listStyleType": "none"}}>{lesson.subject}</li>
+                              <div style={{ "color": this.isColorDark(lesson.subjectColor) ? "rgba(255, 255, 255, 0.5)" : "rgba(0, 0, 0, 0.5)"}}>
+                                <li className="mdl-list__lesson_other" style={{"listStyleType": "none"}}>{lesson.place}</li>
+                                <li className="mdl-list__lesson_other" style={{"listStyleType": "none"}}>{lesson.teacher}</li>
+                              </div>
+                            </div>
+                          </div>)
+          }.bind(this))}
+          {/*}<FABButton colored ripple style={{"position": "absolute", "paddingLeft": "90%", "paddingTop":"40%"}} onClick={this.showModalDialog}>
+              <Icon name="add" />
+          </FABButton>{*/}
+            <div style={{"position": "absolute", "paddingLeft": "90%", "paddingTop":"40%"}} onClick={this.showModalDialog}>
+              <div className="mdl-button mdl-js-button mdl-button--fab mdl-button--primary show-modal" >
+                  <i className="material-icons" >add</i>
+              </div>
+            </div>
+      </div>
+        </div>
+      </div>
+         
       </div>
     );
+
+
   }
 }
+
 
 
 ReactDOM.render(
