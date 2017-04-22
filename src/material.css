@@ -10252,6 +10252,111 @@ _:-ms-input-placeholder, :root .mdl-slider.mdl-slider.is-upgraded {
 /* Shadows */
 /* Animations */
 /* Dialog */
+.circle {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    position: absolute;
+    margin-top: 8px;
+    margin-left: 220px;
+}
+
+.red{
+  background: rgba(244,67,54,1); 
+}
+
+.pink {
+  background: rgba(233,30,99,1);  
+}
+
+.purple {
+  background: rgba(156,39,176,1);  
+}
+
+.deep-purple{ 
+  background: rgba(103,58,183,1);   
+}
+
+.indigo {
+  background: rgba(63,81,181,1);
+}
+
+.blue {
+  background: rgba(33,150,243,1);
+}
+
+.cyan{
+  background: rgba(0,151,167,1);
+}
+
+.teal{
+  background: rgba(0,150,136,1); 
+}
+
+.green{
+  background: rgba(67,160,71,1);
+}
+
+.light-green{
+  background: rgba(139,195,74,1); 
+}
+
+.lime {
+  background: rgba(205,220,57,1);
+}
+
+.yellow{
+  background: rgba(255,235,59,1); 
+}
+
+.amber{
+  background: rgba(255,193,7,1);
+}
+
+.orange{
+  background: rgba(255,152,0,1);
+}
+
+.deep-orange {
+  background: rgba(255,87,34,1);
+}
+
+.brown {
+  background: rgba(121,85,72,1);
+}
+
+.grey{
+  background: rgba(158,158,158,1);
+}
+
+
+.getmdl-select .mdl-icon-toggle__label {
+    float: right;
+    margin-top: -30px;
+    color: rgba(0, 0, 0, 0.4)
+}
+
+.getmdl-select.is-focused .mdl-icon-toggle__label {
+    color: #3f51b5
+}
+
+.getmdl-select .mdl-menu__container {
+    width: 100% !important;
+    overflow: hidden
+}
+
+.getmdl-select .mdl-menu__container .mdl-menu .mdl-menu__item {
+    font-size: 16px
+}
+
+.getmdl-select__fullwidth .mdl-menu {
+    width: 100%
+}
+
+.getmdl-select__fix-height .mdl-menu__container {
+    overflow-y: auto;
+    max-height: 300px !important
+}
 .mdl-textfield {
   position: relative;
   font-size: 16px;

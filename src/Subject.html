@@ -1,0 +1,192 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="material.css">
+    <script src="material.js"></script>
+
+    <script>
+
+        function showModal() {
+            var dialog = document.querySelector('dialog');
+
+            dialog.showModal();
+
+            dialog.querySelector('.close').addEventListener('click', function () {
+                dialog.close();
+            });
+
+            dialog.querySelector('.ok').addEventListener('click', function () {
+                dialog.close();
+            });
+        }
+
+        "use strict";
+        window.onload = function () {
+            getmdlSelect.init(".getmdl-select"), document.addEventListener("DOMNodeInserted", function (e) {
+                e.relatedNode.querySelectorAll(".getmdl-select").length > 0 && componentHandler.upgradeDom()
+            }, !1)
+        };
+
+        var getmdlSelect = {
+            defaultValue: {width: 300}, addEventListeners: function (e) {
+                var t = e.querySelector("input"), n = e.querySelectorAll("li"), l = e.querySelector(".mdl-js-menu");
+                t.onkeydown = function (e) {
+                    38 != e.keyCode && 40 != e.keyCode || l.MaterialMenu.show()
+                }, l.onkeydown = function (e) {
+                    13 == e.keyCode && t.focus()
+                }, [].forEach.call(n, function (n) {
+                    n.onclick = function () {
+
+                        var content = n.textContent.replace(/\s/g, '');
+                        document.getElementById('sample1').style.color = content;
+                        if (t.value = content, e.MaterialTextfield.change(content), setTimeout(function () {
+                                e.MaterialTextfield.updateClasses_()
+                            }, 250), t.dataset.val = n.dataset.val || "", "createEvent" in document) {
+                            var o = document.createEvent("HTMLEvents");
+                            o.initEvent("change", !1, !0), l.MaterialMenu.hide(), t.dispatchEvent(o)
+                        } else t.fireEvent("onchange")
+                    }
+                })
+            }, init: function (e, t) {
+                var n = document.querySelectorAll(e);
+                [].forEach.call(n, function (e) {
+                    getmdlSelect.addEventListeners(e);
+                    var n = t ? t : e.querySelector(".mdl-menu").offsetWidth ? e.querySelector(".mdl-menu").offsetWidth : getmdlSelect.defaultValue.width;
+                    e.style.width = n + "px"
+                })
+            }
+        };
+        console.log(getmdlSelect)
+    </script>
+    <style>
+
+        .circle {
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            position: absolute;
+            margin-top: 8px;
+        }
+
+        .getmdl-select .mdl-icon-toggle__label {
+            float: right;
+            margin-top: -30px;
+            color: rgba(0, 0, 0, 0.4)
+        }
+
+        .getmdl-select.is-focused .mdl-icon-toggle__label {
+            color: #3f51b5
+        }
+
+        .getmdl-select .mdl-menu__container {
+            width: 100% !important;
+            overflow: hidden
+        }
+
+        .getmdl-select .mdl-menu__container .mdl-menu .mdl-menu__item {
+            font-size: 16px
+        }
+
+        .getmdl-select__fullwidth .mdl-menu {
+            width: 100%
+        }
+
+        .getmdl-select__fix-height .mdl-menu__container {
+            overflow-y: auto;
+            max-height: 300px !important
+        }
+
+        /*# sourceMappingURL=getmdl-select.min.css.map */
+
+    </style>
+</head>
+
+<body>
+
+<h4>Add subject</h4>
+
+<button class="mdl-button mdl-js-button mdl-button--fab mdl-button--primary show-modal" onclick="showModal()">
+    <i class="material-icons">add</i>
+</button>
+
+<dialog class="mdl-dialog">
+
+    <div class="mdl-dialog__content">
+
+        <li class="mdl-list__item">
+				<span class="mdl-list__item-primary-content">
+					<i class="material-icons mdl-list__item-icon">label</i>
+					Add subject
+				</span>
+        </li>
+
+        <form action="#">
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="name">
+                <label class="mdl-textfield__label" for="name">Name</label>
+            </div>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="abbreviation">
+                <label class="mdl-textfield__label" for="abbreviation">Abbreviation</label>
+            </div>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <textarea class="mdl-textfield__input" type="text" id="info"></textarea>
+                <label class="mdl-textfield__label" for="info">Info</label>
+            </div>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
+                <input class="mdl-textfield__input" type="text" id="sample1" value="" readonly tabIndex="-1">
+
+                <label for="sample1" class="mdl-textfield__label">Color</label>
+
+                <ul for="sample1" class="mdl-menu mdl-menu--bottom-left mdl-js-menu">
+
+                    <li class="mdl-menu__item">
+                        <div class="circle" style="background: black;"></div>
+                        <div style="padding-left:50px; position: static">black</div>
+                    </li>
+
+                    <li class="mdl-menu__item">
+                        <div class="circle" style="background: red;"></div>
+                        <div style="padding-left:50px;">red</div>
+                    </li>
+
+                    <li class="mdl-menu__item">
+                        <div class="circle" style="background: yellow;"></div>
+                        <div style="padding-left:50px;">yellow</div>
+                    </li>
+
+                    <li class="mdl-menu__item">
+                        <div class="circle" style="background: pink;"></div>
+                        <div style="padding-left:50px;">pink</div>
+                    </li>
+
+                    <li class="mdl-menu__item">
+                        <div class="circle" style="background: green;"></div>
+                        <div style="padding-left:50px;">green</div>
+
+                    </li>
+                </ul>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <div class="mdl-dialog__actions mdl-dialog__actions">
+        <button type="button" class="mdl-button ok">OK</button>
+        <button type="button" class="mdl-button close">CLOSE</button>
+    </div>
+
+</dialog>
+
+
+<script>
+
+</script>
+</body>
+</html>

@@ -3,7 +3,9 @@ import * as firebase from 'firebase';
 import ReactDOM from 'react-dom';
 import styles from './material.css';
 import * as material from "./material.js";
-import ReactMDL from 'react-mdl';
+
+import Dialog from './dialog.js'
+
 /*var config = {
     apiKey: "AIzaSyA0DlUWE0V9e-6AL0Ta9eaVIf2yrMbyc_k",
     authDomain: "horario-10354.firebaseapp.com",
@@ -42,88 +44,6 @@ import ReactMDL from 'react-mdl';
     })
   });
   
-
-  class Dialog extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.handleOpenDialog = this.handleOpenDialog;
-    this.handleCloseDialog = this.handleCloseDialog;
-  }
-
-
- 
-  render() {
-    return (
-          <div>
-          <li className="mdl-list__item">
-        <span className="mdl-list__item-primary-content">
-          <i className="material-icons mdl-list__item-icon">label</i>
-          Add subject
-        </span>
-        </li>
-            <form action="#">
-
-            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input className="mdl-textfield__input" type="text" id="name"/>
-                <label className="mdl-textfield__label" htmlFor="name">Name</label>
-            </div>
-
-            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input className="mdl-textfield__input" type="text" id="abbreviation"/>
-                <label className="mdl-textfield__label" htmlFor="abbreviation">Abbreviation</label>
-            </div>
-
-            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <textarea className="mdl-textfield__input" type="text" id="info"></textarea>
-                <label className="mdl-textfield__label" htmlFor="info">Info</label>
-            </div>
-
-            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
-                <input className="mdl-textfield__input" type="text" id="sample1" value="" readOnly tabIndex="-1"/>
-
-                <label htmlFor="sample1" className="mdl-textfield__label">Color</label>
-
-                <ul htmlFor="sample1" className="mdl-menu mdl-menu--bottom-left mdl-js-menu">
-
-                    <li className="mdl-menu__item">
-                        <div className="circle" styles ="background: black;"></div>
-                        <div styles ="padding-left:50px; position: static">black</div>
-                    </li>
-
-                    <li className="mdl-menu__item">
-                        <div className="circle" styles ="background: red;"></div>
-                        <div styles ="padding-left:50px;">red</div>
-                    </li>
-
-                    <li className="mdl-menu__item">
-                        <div className="circle" styles ="background: yellow;"></div>
-                        <div styles ="padding-left:50px;">yellow</div>
-                    </li>
-
-                    <li className="mdl-menu__item">
-                        <div className="circle" styles ="background: pink;">chc</div>
-                        <div styles ="padding-left:50px;">pink</div>
-                    </li>
-
-                    <li className="mdl-menu__item">
-                        <div className="circle" styles ="background: green;"></div>
-                        <div styles ="padding-left:50px;">green</div>
-
-                    </li>
-                </ul>
-
-            </div>
-
-        </form>
-         <div class="mdl-dialog__actions mdl-dialog__actions">
-        <button type="button" class="mdl-button ok">OK</button>
-        <button type="button" class="mdl-button close">CLOSE</button>
-    </div>
-          </div>
-    );
-  }
-}
 
 
 class App extends Component {
@@ -185,6 +105,7 @@ class App extends Component {
         g = (num & 0xFF00) >>> 8,
         r = (num & 0xFF0000) >>> 16,
         a = ( (num & 0xFF000000) >>> 24 ) / 255 ;
+
     return "rgba(" + [r, g, b, a].join(",") + ")";
   }
 
@@ -217,7 +138,13 @@ showModalDialog = () => {
             var dialog = document.querySelector('dialog');
 
             dialog.showModal();
+            dialog.querySelector('.close').addEventListener('click', function () {
+                dialog.close();
+            });
 
+            dialog.querySelector('.ok').addEventListener('click', function () {
+                dialog.close();
+            });
            
   } 
  
@@ -283,7 +210,7 @@ showModalDialog = () => {
       <div>
       <div className="navbar navbar-default">
       
-        <div s={{"paddingLeft": "8%","paddingTop":"5px", "width":"45px", "height":"45px"}} >       
+        <div style={{"paddingLeft": "8%","paddingTop":"5px", "width":"45px", "height":"45px"}} >       
              <img src="a.png" style={{"position": "absolute", "width":"35px", "height":"35px"}} onClick={this.nextWeek}/>
             <div style={{"paddingLeft": "13px", "paddingTop": "10px", "width":"100%", "height":"100%", "color": "rgb(128,128,128)"}}>{this.state.week}</div>
         </div>  
