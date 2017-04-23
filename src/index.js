@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import ReactDOM from 'react-dom';
 import styles from './material.css';
-import * as material from "./material.js";
 
 import Dialog from './dialog.js'
+import {colorList, colorListInt,colorString} from './dialog.js'
 
 /*var config = {
     apiKey: "AIzaSyA0DlUWE0V9e-6AL0Ta9eaVIf2yrMbyc_k",
@@ -37,6 +37,8 @@ import Dialog from './dialog.js'
   const lessons = timeTable.child(timeTableKey+"/lessons");
   let i=0;
   
+
+
   lessons.once("value", snap => {
     snap.forEach(listed =>{
       lessonList[i]= listed.key;
@@ -44,19 +46,63 @@ import Dialog from './dialog.js'
     })
   });
   
-
-
+  var getId;
+  var getInputSubject= {
+      name: "",
+      abbreviation: "",
+      info: "",
+      color: ""
+    } 
 class App extends Component {
 
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state={
           lessons: [],
           week: 1
         }
       }
 
+   
+
+ 
+  getValue(value) {
+    console.log(colorString);
+    getInputSubject.color = colorListInt[colorList.indexOf(colorString)];
+    console.log( getInputSubject.color);
+    if(getId==="name")  getInputSubject.name = value;
+    if(getId==="abbreviation")  getInputSubject.abbreviation = value;
+    if(getId==="info")  getInputSubject.info = value;
+   
+ }
+
+
+   getId(value) {
+      getId=value
+   }
+
+   writeNewPost(name, abb, info, color) {
+    // A post entry.
+    var postData = {
+      name: name,
+      abbreviation: abb,
+      color: color,
+      info: info
+    };
+
+    // Get a key for a new Post.
+      var newPostKey = firebase.database().ref().child("user/"+userKey+"/timetable_public/"+timeTableKey+"/subjects").push().key;
+
+    // Write the new post's data simultaneously in the posts list and the user's post list.
+    var updates = {};
+    updates["/user/"+userKey+"/timetable_public/"+timeTableKey+"/subjects/" + newPostKey] = postData;
+   
+
+    return firebase.database().ref().update(updates);
+  }
+
     componentDidMount(){
+
     timeTable.on("value", snap=> {
       const currentTimeTable = snap.child(timeTableKey);
       weekCycle = currentTimeTable.child("weekCycle").val();
@@ -130,26 +176,52 @@ class App extends Component {
       }
   }
 
+  clearInf(){
+    document.getElementById('name').value='';
+    document.getElementById('info').value='';
+    document.getElementById('abbreviation').value='';
+    document.getElementById('divName').className = 
+    document.getElementById('divName').className.replace('is-dirty','');
+     document.getElementById('divAbb').className = 
+    document.getElementById('divAbb').className.replace('is-dirty','');
+     document.getElementById('divInfo').className = 
+    document.getElementById('divInfo').className.replace('is-dirty','');
+  }
+
 showModalDialog = () => {
             
 
 
-            console.log("ASDASDASDSADS")
-            var dialog = document.querySelector('dialog');
-
+            if(dialog === undefined) var dialog = document.querySelector('dialog'); 
+            this.clearInf();
             dialog.showModal();
-            dialog.querySelector('.close').addEventListener('click', function () {
-                dialog.close();
-            });
+            
+            dialog.querySelector('.close').removeEventListener('click', close);
 
-            dialog.querySelector('.ok').addEventListener('click', function () {
+            dialog.querySelector('.close').addEventListener('click', function close() {
+                
                 dialog.close();
             });
+          
+             dialog.querySelector('.ok').removeEventListener('click', open);
+            dialog.querySelector('.ok').addEventListener('click', function open() {
+              console.log(getInputSubject.name+"           "+getInputSubject.abbreviation+"           "+getInputSubject.info+"           "+getInputSubject.color);
+                if(getInputSubject.name!="") {
+                this.writeNewPost(getInputSubject.name,getInputSubject.abbreviation,getInputSubject.info, getInputSubject.color);
+                  getInputSubject.name="";
+                  getInputSubject.color="";
+                  getInputSubject.info="";
+                  getInputSubject.abbreviation="";
+           dialog.close();
+                }
+                
+            }.bind(this));
            
   } 
  
 
   render() {
+
     const {lessons} = this.state;   
     const week = this.state.week;
     var min=9999, max=0;
@@ -171,11 +243,9 @@ showModalDialog = () => {
         day++;
       }
     }.bind(this))
-    console.log(day)
     var x=100/day;
     var i=0;
   
-    console.log(days)
 
     while(i<7){
       if(days[i]===0){
@@ -185,7 +255,7 @@ showModalDialog = () => {
       ++i;
     }
     if(days[days.length-1]==0)     days.splice(days.length-1,1)
-      console.log(days)
+   
     var scale=max-min;
     
     
@@ -222,7 +292,7 @@ showModalDialog = () => {
           
           <dialog className="mdl-dialog">
             <div className="mdl-dialog__content">
-<Dialog/>
+<Dialog  getIdaaa={this.getId} getValaaa={this.getValue} />
             </div>
           </dialog>
 
@@ -283,11 +353,13 @@ showModalDialog = () => {
           {/*}<FABButton colored ripple style={{"position": "absolute", "paddingLeft": "90%", "paddingTop":"40%"}} onClick={this.showModalDialog}>
               <Icon name="add" />
           </FABButton>{*/}
-            <div style={{"position": "absolute", "paddingLeft": "90%", "paddingTop":"40%"}} onClick={this.showModalDialog}>
+            <div style={{"position": "absolute", "paddingLeft": "90%", "paddingTop":"70vh"}} onClick={this.showModalDialog}>
               <div className="mdl-button mdl-js-button mdl-button--fab mdl-button--primary show-modal" >
                   <i className="material-icons" >add</i>
               </div>
             </div>
+
+
       </div>
         </div>
       </div>

@@ -4,9 +4,8 @@ import ReactMDL from 'react-mdl';
 var MDLite = require('./material');
 var componentHandler = MDLite.componentHandler;
 var colorList= ["red","pink","purple","deep-purple","indigo","blue","cyan","teal","green","light-green","lime","yellow","amber","orange","deep-orange","brown","grey"];
-
-
-
+var colorListInt = [0xFFF44336, 0xFFE91E63,0xFF9C27B0,0xFF673AB7,0xFF3F51B5, 0xFF2196F3, 0xFF0097A7, 0xFF009688, 0xFF43A047,0xFF8BC34A,0xFFCDDC39, 0xFFFFEB3B,0xFFFFC107,0xFFFF9800,0xFFFF5722,0xFF795548,0xFF9E9E9E];
+var colorString="grey";
 var getmdlSelect = {
             defaultValue: {width: 300}, addEventListeners: function (e) {
                 var t = e.querySelector("input"), n = e.querySelectorAll("li"), l = e.querySelector(".mdl-js-menu");
@@ -17,8 +16,10 @@ var getmdlSelect = {
                 }, [].forEach.call(n, function (n) {
                     n.onclick = function () {
 
-                        var content = n.textContent.replace(/\s/g, '');
-                        document.getElementById('sample1').style.color = content;
+                        var content = n.textContent;
+                        document.getElementById('color').style.color = content;
+                        colorString = content;
+
                         if (t.value = content, e.MaterialTextfield.change(content), setTimeout(function () {
                                 e.MaterialTextfield.updateClasses_()
                             }, 250), t.dataset.val = n.dataset.val || "", "createEvent" in document) {
@@ -43,14 +44,25 @@ var getmdlSelect = {
     this.state = {};
     this.handleOpenDialog = this.handleOpenDialog;
     this.handleCloseDialog = this.handleCloseDialog;
+    this.getText = this.getText.bind(this)
+
+  }
+  getText(e) {
+    this.props.getValaaa(e.target.value);
+    this.props.getIdaaa(e.target.id)
   }
 
   componentDidMount(){
+
+   
+
      getmdlSelect.init(".getmdl-select"), document.addEventListener("DOMNodeInserted", function (e) {
                 e.relatedNode.querySelectorAll(".getmdl-select").length > 0 && componentHandler.upgradeDom()
             }, !1)
+
   }
- 
+
+  
   render() {
     return (
           <div>
@@ -62,33 +74,33 @@ var getmdlSelect = {
         </li>
             <form action="#">
 
-            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input className="mdl-textfield__input" type="text" id="name"/>
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="divName">
+                <input className="mdl-textfield__input" type="text" id="name" onChange={this.getText}/>
                 <label className="mdl-textfield__label" htmlFor="name">Name</label>
             </div>
 
-            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input className="mdl-textfield__input" type="text" id="abbreviation"/>
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="divAbb">
+                <input className="mdl-textfield__input" type="text" id="abbreviation" onChange={this.getText}/>
                 <label className="mdl-textfield__label" htmlFor="abbreviation">Abbreviation</label>
             </div>
 
-            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <textarea className="mdl-textfield__input" type="text" id="info"></textarea>
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="divInfo">
+                <textarea className="mdl-textfield__input" type="text" id="info" onChange={this.getText}></textarea>
                 <label className="mdl-textfield__label" htmlFor="info">Info</label>
             </div>
 
-            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth">
-                <input className="mdl-textfield__input" type="text" id="sample1" value="" readOnly tabIndex="-1"/>
+            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select getmdl-select__fullwidth ">
+                <input className="mdl-textfield__input" type="text" id="color" value="grey" readOnly tabIndex="-1" onclick={this.colorPick}/>
 
-                <label htmlFor="sample1" className="mdl-textfield__label">Color</label>
+                <label htmlFor="color" className="mdl-textfield__label">Color</label>
 
-                <ul htmlFor="sample1" className="mdl-menu mdl-menu--bottom-left mdl-js-menu" style={{"height":"25vh","overflow": "auto"}}>
+                <ul htmlFor="color" className="mdl-menu mdl-menu--bottom-left mdl-js-menu" style={{"height":"25vh","overflow": "auto"}} >
 
                     {colorList.map(function(color){ 
                          return(
-                            <li className="mdl-menu__item">
-                                <div className={'circle '+color}></div>
-                                <div styles ="padding-left:50px; position: static">{color}</div>
+                            <li className="mdl-menu__item" >
+                                <div className={'circle '+color} ></div>
+                                <div styles ="padding-left:50px; position: static" >{color}</div>
                             </li>)
                      
                     }.bind(this))}
@@ -107,5 +119,7 @@ var getmdlSelect = {
     );
   }
 }
+
+export {colorList, colorListInt,colorString};
 
 export default Dialog;
